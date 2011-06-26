@@ -1,0 +1,54 @@
+<?xml version="1.0" ?>
+<project name="Peer Pool" default="all">
+
+    <target name="mkdirs">
+        <mkdir dir="out"/>
+        <mkdir dir="docs"/>
+        <mkdir dir="dist"/>
+    </target>
+
+    <target name="compile" depends="mkdirs">
+        <javac srcdir="src"
+               destdir="out"
+               includeantruntime="false"
+               classpath="lib/*.jar"
+        />
+    </target>
+
+    <target name="docs" depends="mkdirs">
+        <javadoc sourcepath="src"
+                 destdir="docs"
+        />
+    </target>
+
+    <target name="dist" depends="compile">
+        <delete dir="disttemp"/>
+        <mkdir dir="disttemp"/>
+        <unzip dest="disttemp">
+            <fileset dir="lib">
+                <include name="**/*.jar"/>
+            </fileset>
+        </unzip>
+        <jar jarfile="dist/PeerPool.jar" basedir="out">
+            <manifest>
+                <attribute name="Main-Class" value="cole.finlay.peerpool.PeerPool"/>
+            </manifest>
+        </jar>
+        <jar destfile="dist/PeerPool.jar"
+             basedir="disttemp"
+             update="true"
+        />
+        <delete dir="disttemp"/>
+    </target>
+
+    <target name="clean">
+        <delete dir="out"/>
+        <delete dir="docs"/>
+        <delete dir="disttemp"/>
+        <delete dir="dist"/>
+    </target>
+
+    <target name="all" depends="dist,docs">
+    </target>
+
+</project>
